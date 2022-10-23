@@ -12,7 +12,9 @@ export const Agenda = ({
   selectedDay,
   events,
   onDayPress,
+  theme,
   monthTheme,
+  renderSectionHeader,
 }: AgendaProps) => {
   const sectionListRef = useRef<SectionList>(null);
   const currentDay = useMemo(() => selectedDay ?? new Date(), [selectedDay]);
@@ -34,8 +36,8 @@ export const Agenda = ({
   const { markedDays } = useAgendaEvents(currentDay, events ?? []);
 
   return (
-    <View style={viewStyles.container}>
-      <View style={viewStyles.monthContainer}>
+    <View style={[viewStyles.container, theme?.container]}>
+      <View style={[viewStyles.monthContainer, theme?.monthContainer]}>
         <Month
           month={currentDay.getMonth()}
           year={currentDay.getFullYear()}
@@ -52,6 +54,7 @@ export const Agenda = ({
         currentDay={currentDay}
         markedDays={markedDays}
         ref={sectionListRef}
+        renderSectionHeader={renderSectionHeader}
       />
     </View>
   );

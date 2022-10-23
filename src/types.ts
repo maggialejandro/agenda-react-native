@@ -1,4 +1,9 @@
-import { MarkedDays, MonthProps, ThemeType } from 'react-native-month';
+import { SectionListProps, TextStyle, ViewStyle } from 'react-native';
+import {
+  MarkedDays,
+  MonthProps,
+  ThemeType as MonthThemeType,
+} from 'react-native-month';
 
 export type Event = {
   name: string;
@@ -18,7 +23,21 @@ type MarkedDay = ValueOf<MarkedDays>;
 export type ExtendedMarkedDay = MarkedDay & { events: Event[] };
 export type ExtendedMarkedDays = Record<MonthDayKey, ExtendedMarkedDay>;
 
-export { ThemeType as MonthThemeType };
+interface EventsThemeType {
+  sectionHeaderContainer?: ViewStyle;
+  sectionHeaderFont?: TextStyle;
+  sectionFooterContainer?: ViewStyle;
+  sectionFooterFont?: TextStyle;
+}
+
+interface EventThemeType {}
+
+export interface ThemeType extends EventThemeType, EventsThemeType {
+  container?: ViewStyle;
+  monthContainer?: ViewStyle;
+}
+
+export { MonthThemeType };
 
 interface AgendaMonthProps
   extends Pick<
@@ -38,5 +57,7 @@ export interface AgendaProps extends AgendaMonthProps {
   events?: Event[];
   onDayPress?: (date: Date) => void;
   onEventPress?: (event: Event) => void;
-  monthTheme?: ThemeType;
+  monthTheme?: MonthThemeType;
+  theme?: ThemeType;
+  renderSectionHeader?: SectionListProps<Event>['renderSectionHeader'];
 }

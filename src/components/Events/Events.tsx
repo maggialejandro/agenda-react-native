@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import React, { forwardRef, Ref, useCallback } from 'react';
-import { SectionList, Text, View } from 'react-native';
-import { Event as Event, ExtendedMarkedDays } from 'src/types';
+import { SectionList, SectionListProps, Text, View } from 'react-native';
+import { Event as Event, ExtendedMarkedDays, ThemeType } from 'src/types';
 import { EventItem } from '../EventItem/EventItem';
 import { Line } from '../Line/Line';
 import { useMonthEvents } from './Events.hooks';
@@ -12,13 +12,21 @@ type EventsProps = {
   currentDay: Date;
   markedDays: ExtendedMarkedDays;
   onEventPress?: (event: Event) => void;
+  renderSectionHeader?: SectionListProps<Event>['renderSectionHeader'];
+  theme?: ThemeType;
 };
 
 const keyExtractor = (item: Event, index: number) => `${item.name}-${index}`;
 
 export const Events = forwardRef(
   (
-    { currentDay, markedDays, onEventPress }: EventsProps,
+    {
+      currentDay,
+      markedDays,
+      onEventPress,
+      renderSectionHeader,
+      theme,
+    }: EventsProps,
     ref: Ref<SectionList>
   ) => {
     const sections = useMonthEvents(currentDay, markedDays);
@@ -30,18 +38,44 @@ export const Events = forwardRef(
       [onEventPress]
     );
 
-    const renderSectionFooter = useCallback(({ section }) => {
-      if (section.data.length === 0) {
+    const renderSectionFooter = useCallback(
+      ({ section }) => {
+        if (section.data.length === 0) {
+          return (
+            <View
+              style={[viewStyles.sectionFooter, theme?.sectionFooterContainer]}
+            >
+              <Text
+                style={[textStyles.sectionFooterFont, theme?.sectionFooterFont]}
+              >
+                There are not events this day
+              </Text>
+            </View>
+          );
+        }
+        return null;
+      },
+      [theme?.sectionFooterContainer, theme?.sectionFooterFont]
+    );
+
+    const defaultRenderSectionHeader = useCallback(
+      ({ section: { title, key } }) => {
         return (
-          <View style={viewStyles.sectionFooter}>
-            <Text style={textStyles.sectionFooterFont}>
-              There are not events this day
+          <View
+            style={[viewStyles.sectionHeader, theme?.sectionHeaderContainer]}
+          >
+            <Line color="lightgray" />
+            <Text
+              style={[textStyles.sectionHeaderFont, theme?.sectionHeaderFont]}
+            >
+              {dayjs(key).isSame(dayjs(), 'day') ? 'Today' : title}
             </Text>
+            <Line color="lightgray" />
           </View>
         );
-      }
-      return null;
-    }, []);
+      },
+      [theme?.sectionHeaderContainer, theme?.sectionHeaderFont]
+    );
 
     return (
       <SectionList
@@ -49,15 +83,7 @@ export const Events = forwardRef(
         style={viewStyles.listContainer}
         sections={sections}
         renderItem={renderEvent}
-        renderSectionHeader={({ section: { title, key } }) => (
-          <View style={viewStyles.sectionHeader}>
-            <Line color="lightgray" />
-            <Text style={textStyles.sectionHeaderFont}>
-              {dayjs(key).isSame(dayjs(), 'day') ? 'Today' : title}
-            </Text>
-            <Line color="lightgray" />
-          </View>
-        )}
+        renderSectionHeader={renderSectionHeader ?? defaultRenderSectionHeader}
         renderSectionFooter={renderSectionFooter}
         keyExtractor={keyExtractor}
       />
