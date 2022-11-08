@@ -6,7 +6,7 @@
       "esnext"
     ],
     "paths": {
-      "react-native-agenda": [
+      "agenda-react-native": [
         "../src/index"
       ]
     },

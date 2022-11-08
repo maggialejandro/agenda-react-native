@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SafeAreaView, useWindowDimensions } from 'react-native';
-import { Agenda, Event, MonthThemeType } from 'react-native-agenda';
+import { Agenda, Event, MonthThemeType } from 'agenda-react-native';
 
 const MONTH_THEME: MonthThemeType = {
   activeDayContentStyle: {
@@ -50,6 +50,30 @@ const events: Event[] = [
     startDate: new Date(2022, 7, 28, 14, 20),
     endDate: new Date(2022, 8, 3, 14, 20),
     color: '#fa8100',
+  },
+  {
+    name: 'Study 2 ',
+    startDate: new Date(2022, 7, 28, 14, 20),
+    endDate: new Date(2022, 8, 3, 14, 20),
+    color: '#A0E7E5',
+  },
+  {
+    name: 'Study 3',
+    startDate: new Date(2022, 7, 28, 14, 20),
+    endDate: new Date(2022, 8, 3, 14, 20),
+    color: '#B4F8C8',
+  },
+  {
+    name: 'Study 4',
+    startDate: new Date(2022, 7, 28, 14, 20),
+    endDate: new Date(2022, 8, 3, 14, 20),
+    color: '#FBE7C6',
+  },
+  {
+    name: 'Study 5',
+    startDate: new Date(2022, 7, 28, 14, 20),
+    endDate: new Date(2022, 8, 3, 14, 20),
+    color: '#FFAEBC',
   },
   {
     name: 'Check-in',

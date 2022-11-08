@@ -1,37 +1,43 @@
 import dayjs from 'dayjs';
 import { useMemo } from 'react';
-import { Event, ExtendedMarkedDays } from 'src/types';
+import { AgendaProps, Event, ExtendedMarkedDays } from 'src/types';
 
-export const useAgendaEvents = (currentMonth: Date, events: Event[]) => {
+export const useAgendaEvents = (
+  currentMonth: Date,
+  events: Event[],
+  viewType: AgendaProps['viewType'],
+  firstDayMonday: boolean
+) => {
   return useMemo(() => {
     const markedDays: ExtendedMarkedDays = {};
-    const monthStartingDay = dayjs(currentMonth)
-      .startOf('month')
-      .startOf('day');
-    const monthEndingDay = dayjs(currentMonth).endOf('month').endOf('day');
+    const rangeType =
+      viewType === 'week' ? (firstDayMonday ? 'isoWeek' : 'week') : 'month';
+    const firstDay = dayjs(currentMonth).startOf(rangeType).startOf('day');
+
+    const endingDay = dayjs(currentMonth).endOf(rangeType).endOf('day');
 
     events.forEach((event) => {
       if (dayjs(event.endDate).isBefore(dayjs(event.startDate))) {
         throw new Error(`${event.name} startDate must be previous to endDate`);
       }
 
-      if (dayjs(event.endDate).isBefore(monthStartingDay)) {
+      if (dayjs(event.endDate).isBefore(firstDay)) {
         // previous month event
         return;
       }
 
-      if (dayjs(event.startDate).isAfter(monthEndingDay)) {
+      if (dayjs(event.startDate).isAfter(endingDay)) {
         // future month event
         return;
       }
 
-      let currentDay = dayjs(event.startDate).isBefore(monthStartingDay)
-        ? monthStartingDay
+      let currentDay = dayjs(event.startDate).isBefore(firstDay)
+        ? firstDay
         : dayjs(event.startDate);
 
-      const lastDay = dayjs(event.endDate).isBefore(monthEndingDay)
+      const lastDay = dayjs(event.endDate).isBefore(endingDay)
         ? dayjs(event.endDate)
-        : monthEndingDay;
+        : endingDay;
 
       while (currentDay.isSameOrBefore(lastDay, 'day')) {
         const dot = { color: event.color, selectedColor: event.color };
@@ -52,24 +58,5 @@ export const useAgendaEvents = (currentMonth: Date, events: Event[]) => {
     });
 
     return { markedDays };
-  }, [currentMonth, events]);
-};
-
-export const getMonthEvents = (currentMonth: Date, events: Event[]) => {
-  return events.filter((event) => {
-    if (dayjs(event.endDate).isBefore(dayjs(event.startDate))) {
-      throw new Error(`${event.name} startDate must be previous to endDate`);
-    }
-
-    const monthStartingDay = dayjs(currentMonth)
-      .startOf('month')
-      .startOf('day');
-    const monthEndingDay = dayjs(currentMonth).endOf('month').endOf('day');
-
-    if (dayjs(event.startDate).isBetween(monthStartingDay, monthEndingDay)) {
-      return true;
-    }
-
-    return dayjs(event.endDate).isBetween(monthStartingDay, monthEndingDay);
-  });
+  }, [currentMonth, events, firstDayMonday, viewType]);
 };
