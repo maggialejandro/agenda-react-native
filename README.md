@@ -35,6 +35,7 @@ yarn add agenda-react-native
 | **`monthTheme`**     | Month component theme                    | no        |         | MonthThemeType         |
 | **`theme`**          | Agenda theme                             | no        |         | ThemeType              |
 | **`locale`**         | Locale                                   | no        |         | LocaleType             |
+| **`viewType`**       | Locale                                   | no        | 'month' | AgendaViewType         |
 | **`firstDayMonday`** | Monday as first day of the week          | no        | false   | boolean                |
 
 ## License

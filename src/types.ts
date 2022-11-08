@@ -46,6 +46,8 @@ interface AgendaMonthProps
     'firstDayMonday' | 'dayNames' | 'disableOffsetDays'
   > {}
 
+type AgendaViewType = 'month' | 'week' | 'none';
+
 export interface AgendaProps extends AgendaMonthProps {
   /**
    * selected day of the Agenda
@@ -63,4 +65,5 @@ export interface AgendaProps extends AgendaMonthProps {
   renderSectionHeader?: SectionListProps<Event>['renderSectionHeader'];
   locale?: LocaleType;
   firstDayMonday?: boolean;
+  viewType?: AgendaViewType;
 }

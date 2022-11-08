@@ -1,7 +1,12 @@
 import dayjs from 'dayjs';
 import React, { forwardRef, Ref, useCallback } from 'react';
 import { SectionList, SectionListProps, Text, View } from 'react-native';
-import { Event as Event, ExtendedMarkedDays, ThemeType } from 'src/types';
+import {
+  AgendaProps,
+  Event as Event,
+  ExtendedMarkedDays,
+  ThemeType,
+} from 'src/types';
 import { EventItem } from '../EventItem/EventItem';
 import { Line } from '../Line/Line';
 import { useMonthEvents } from './Events.hooks';
@@ -14,6 +19,8 @@ type EventsProps = {
   onEventPress?: (event: Event) => void;
   renderSectionHeader?: SectionListProps<Event>['renderSectionHeader'];
   theme?: ThemeType;
+  viewType: AgendaProps['viewType'];
+  firstDayMonday: boolean;
 };
 
 const keyExtractor = (item: Event, index: number) => `${item.name}-${index}`;
@@ -26,10 +33,17 @@ export const Events = forwardRef(
       onEventPress,
       renderSectionHeader,
       theme,
+      viewType,
+      firstDayMonday,
     }: EventsProps,
     ref: Ref<SectionList>
   ) => {
-    const sections = useMonthEvents(currentDay, markedDays);
+    const sections = useMonthEvents(
+      currentDay,
+      firstDayMonday,
+      markedDays,
+      viewType
+    );
 
     const renderEvent = useCallback(
       ({ item: event }) => {
