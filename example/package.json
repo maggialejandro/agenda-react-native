@@ -12,7 +12,7 @@
     "react": "18.0.0",
     "react-dom": "18.0.0",
     "react-native": "0.69.6",
-    "react-native-month": "^1.5.1",
+    "react-native-month": "^1.5.2",
     "react-native-web": "~0.18.9"
   },
   "devDependencies": {
