@@ -1,6 +1,6 @@
 {
   "name": "agenda-react-native",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "React Native Agenda",
   "main": "lib/commonjs/index.js",
   "react-native": "lib/module/index.js",
